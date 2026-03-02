@@ -7,7 +7,7 @@ use crate::{
         value::{Callable, Native, Value},
     },
 };
-use tick_common::bail;
+use rand::RngExt;
 use std::{
     cell::RefCell,
     f64::consts::{
@@ -16,6 +16,7 @@ use std::{
     },
     rc::Rc,
 };
+use tick_common::bail;
 
 /// Math sin
 fn sin() -> Ref<Native> {
@@ -692,6 +693,32 @@ fn hypot() -> Ref<Native> {
     });
 }
 
+/// Random numner
+fn rnd() -> Ref<Native> {
+    return Ref::new(Native {
+        arity: 2,
+        function: Box::new(|_, span, values| {
+            match (values.get(0).unwrap(), values.get(1).unwrap()) {
+                (Value::Int(x), Value::Int(y)) => Value::Int(rand::rng().random_range(*x..*y)),
+                (Value::Int(x), Value::Float(y)) => {
+                    Value::Float(rand::rng().random_range((*x as f64)..*y))
+                }
+                (Value::Float(x), Value::Int(y)) => {
+                    Value::Float(rand::rng().random_range(*x..(*y as f64)))
+                }
+                (Value::Float(x), Value::Float(y)) => {
+                    Value::Float(rand::rng().random_range(*x..*y))
+                }
+                _ => bail!(RuntimeError::Bail {
+                    text: "not a number".to_string(),
+                    src: span.0.clone(),
+                    span: span.1.clone().into()
+                }),
+            }
+        }),
+    });
+}
+
 /// Provides `math` module env
 pub fn provide_env() -> EnvRef {
     let mut env = Environment::default();
@@ -726,6 +753,7 @@ pub fn provide_env() -> EnvRef {
     env.force_define("min", Value::Callable(Callable::Native(min())));
     env.force_define("max", Value::Callable(Callable::Native(max())));
     env.force_define("clamp", Value::Callable(Callable::Native(clamp())));
+    env.force_define("rnd", Value::Callable(Callable::Native(rnd())));
     env.force_define("pi", Value::Float(PI));
     env.force_define("tau", Value::Float(TAU));
     env.force_define("frac_pi_2", Value::Float(FRAC_PI_2));

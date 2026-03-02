@@ -11,3 +11,4 @@ tick_ast = { path = "../tick_ast" }
 tick_sema = { path = "../tick_sema" }
 miette = { git = "https://github.com/tick-io/miette", features = ["fancy"] }
 thiserror = "2.0.18"
+rand = "0.10.0"
