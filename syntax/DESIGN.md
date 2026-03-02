@@ -89,7 +89,7 @@ fn fib(x) {
 }
 ```
 
-tick supports closures.
+Tick supports closures:
 
 ```tick
 fn a() {
@@ -108,8 +108,7 @@ b(); // x = 5
 ```
 
 ### Classes or custom data types
-
-tick supports custom data types. Here is example:
+Tick supports custom data types. Here is example:
 ```tick
 type Dog {
   fn init() {
@@ -127,7 +126,7 @@ let b = dog.food;
 ```
 
 ### Comments
-tick comments examples:
+Tick comments examples:
 
 ```
 #[
@@ -143,7 +142,7 @@ brackets
 ```
 
 ### Usings
-tick is modular:
+Tick is modular:
 ```
 use a # import `a` as `a`
 use a as b # import `a` as `b`
@@ -152,7 +151,7 @@ use a for b, c # import multiple items
 ```
 
 ### Loops
-tick loops examples:
+Tick loops examples:
 
 For loop with range examples.
 You can use any expression instead of numbers in range.
@@ -190,9 +189,8 @@ while true {
 ```
 
 ### Logical statements
-
 If examples:
-```
+```tick
 let a = scan();
 if int(a) > 5 {
   ...
@@ -203,7 +201,21 @@ if int(a) > 5 {
 }
 ```
 
-### Errors handling (experimental)
+### Errors raising
+Bail immediately breaks execution with error:
 ```
-raise "hello"
+bail "some text"
+```
+
+### Anonymous function
+Tick supports rust-like anonymous functions:
+```
+let a = || 1;
+let b = |a| a + 1;
+let c = |a| {
+    return a + 1;
+};
+println(a());
+println(b(1));
+println(c(2));
 ```
