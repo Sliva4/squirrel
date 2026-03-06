@@ -256,7 +256,7 @@ fn process_stderr_method() -> Method {
                         .unwrap();
 
                     match internal {
-                        // Safety: borrow is temporal
+                        // Safety: borrow is temporal and short
                         Value::Any(list) => match list.borrow_mut().downcast_mut::<Child>() {
                             Some(child) => {
                                 let output = match &mut child.stderr {
@@ -299,7 +299,7 @@ fn process_write_method() -> Method {
                         .unwrap();
 
                     match internal {
-                        // Safety: borrow is temporal
+                        // Safety: borrow is temporal and short
                         Value::Any(list) => match list.borrow_mut().downcast_mut::<Child>() {
                             Some(child) => {
                                 match &mut child.stdin {
@@ -347,7 +347,7 @@ fn provide_process_type() -> Ref<Type> {
             // Stderr method
             ("stderr".to_string(), process_stderr_method()),
             // Write method
-            ("write".to_string(), process_stderr_method()),
+            ("write".to_string(), process_write_method()),
         ]),
     })
 }
