@@ -11,9 +11,10 @@ This document describes syntax of the `tick` programming language.
 | string    | text data                                                                 | `String`                         |
 | callable  | represents reference to  any callable: function, native, bound, etc.      | `Rc<Function>`                   |
 | meta type | represents reference to the type.                                         | `Rc<Type>`                       |
+| enum      | represents reference to enumeration.                                      | `Rc<Enum>`                       |
 | instance  | represents reference to instance of the type.                             | `Rc<RefCell<Instance>>`          |
 | null      | represents null value or `nothing`.                                       | `()`                             |
-| module    | represents reference to the module.                                       | `Rc<Module>`                     |
+| module    | represents reference to the module.                                       | `Rc<RefCell<Module>>`            |
 | any       | represents internal rusts `std::Any` variable                             | `Rc<RefCell<dyn std::any::Any>>` |
 
 ### Variable declaration
