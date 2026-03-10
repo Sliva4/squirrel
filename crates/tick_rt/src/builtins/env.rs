@@ -16,7 +16,7 @@ pub fn set_var() -> Ref<Native> {
     Ref::new(Native {
         arity: 2,
         function: Box::new(|_, _, values| {
-            let key = values.get(0).map(|v| v.to_string()).unwrap_or_default();
+            let key = values.first().map(|v| v.to_string()).unwrap_or_default();
             if !key.is_empty() {
                 // Safety: setting variable is safe because of single-threaded runtime
                 unsafe {
@@ -36,7 +36,7 @@ pub fn get_var() -> Ref<Native> {
     Ref::new(Native {
         arity: 1,
         function: Box::new(|_, _, values| {
-            match std::env::var(values.get(0).map(|v| v.to_string()).unwrap_or_default()) {
+            match std::env::var(values.first().map(|v| v.to_string()).unwrap_or_default()) {
                 Ok(val) => Value::String(val),
                 Err(_) => Value::Null,
             }
@@ -49,7 +49,7 @@ pub fn unset() -> Ref<Native> {
     Ref::new(Native {
         arity: 1,
         function: Box::new(|_, _, values| unsafe {
-            std::env::remove_var(values.get(0).unwrap().to_string());
+            std::env::remove_var(values.first().unwrap().to_string());
             Value::Null
         }),
     })
@@ -60,7 +60,7 @@ pub fn var() -> Ref<Native> {
     Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            match std::env::var_os(values.get(0).map(|v| v.to_string()).unwrap_or_default()) {
+            match std::env::var_os(values.first().map(|v| v.to_string()).unwrap_or_default()) {
                 Some(val) => Value::String(val.to_string_lossy().into_owned()),
                 None => error(span, "os variable is not set"),
             }
@@ -113,7 +113,7 @@ pub fn args() -> Ref<Native> {
                                 "$internal".to_string(),
                                 Value::Any(MutRef::new(RefCell::new(
                                     std::env::args()
-                                        .map(|a| Value::String(a))
+                                        .map(Value::String)
                                         .collect::<Vec<Value>>(),
                                 ))),
                             );

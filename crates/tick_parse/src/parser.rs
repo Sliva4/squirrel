@@ -54,7 +54,7 @@ impl<'s> Parser<'s> {
         // If end of file
         if self.current.is_none() {
             Block {
-                span: Span(self.source.clone(), (0..0).into()),
+                span: Span(self.source.clone(), 0..0),
                 statements: Vec::new(),
             }
         }
@@ -874,13 +874,7 @@ impl<'s> Parser<'s> {
     /// Checks token match
     fn check(&self, tk: TokenKind) -> bool {
         match &self.current {
-            Some(it) => {
-                if it.kind == tk {
-                    true
-                } else {
-                    false
-                }
-            }
+            Some(it) => it.kind == tk,
             None => false,
         }
     }

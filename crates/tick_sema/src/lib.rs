@@ -63,44 +63,41 @@ impl Analyzer {
             // Analyzing type methods
             Statement::Type { methods, .. } => {
                 for method in methods {
-                    self.analyze_function(&method);
+                    self.analyze_function(method);
                 }
             }
             // Analyzing function
             Statement::Function(function) => {
-                self.analyze_function(&function);
+                self.analyze_function(function);
             }
             // Analyzing block
             Statement::Block(block) => {
                 self.analyze_block(block);
             }
-            Statement::Return { span, .. } => {
+            Statement::Return { span, .. }
                 // Checking hierarchy of scopes for function
-                if !self.hierarchy_has_fn() {
+                if !self.hierarchy_has_fn() => {
                     bail!(SemaError::ReturnOutsideFn {
                         src: span.0.clone(),
                         span: span.1.clone().into()
                     })
                 }
-            }
-            Statement::Continue(span) => {
+            Statement::Continue(span)
                 // Checking hierarchy of scopes for loop
-                if !self.hierarchy_has_loop() {
+                if !self.hierarchy_has_loop() => {
                     bail!(SemaError::ContinueOutsideLoop {
                         src: span.0.clone(),
                         span: span.1.clone().into()
                     })
                 }
-            }
-            Statement::Break(span) => {
+            Statement::Break(span)
                 // Checking hierarchy of scopes for loop
-                if !self.hierarchy_has_loop() {
+                if !self.hierarchy_has_loop() => {
                     bail!(SemaError::BreakOutsideLoop {
                         src: span.0.clone(),
                         span: span.1.clone().into()
                     })
                 }
-            }
             _ => {}
         }
     }

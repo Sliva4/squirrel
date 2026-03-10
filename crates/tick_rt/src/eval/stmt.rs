@@ -61,7 +61,7 @@ impl<'io> Interpreter<'io> {
         }
         // Else
         else if let Some(else_) = else_ {
-            self.exec(&else_)?;
+            self.exec(else_)?;
         }
 
         Ok(())
@@ -72,7 +72,7 @@ impl<'io> Interpreter<'io> {
         &mut self,
         name_span: &Span,
         name: &str,
-        methods: &Vec<atom::Function>,
+        methods: &[atom::Function],
     ) -> Flow<()> {
         // Creating type
         let type_ref = Ref::new(Type {
@@ -97,17 +97,17 @@ impl<'io> Interpreter<'io> {
         // Defining type in the environment
         self.env
             .borrow_mut()
-            .define(name_span, &name, Value::Type(type_ref));
+            .define(name_span, name, Value::Type(type_ref));
 
         Ok(())
     }
 
     /// Executes enum statement
-    fn exec_enum_decl(&mut self, span: &Span, name: &str, variants: &Vec<String>) -> Flow<()> {
+    fn exec_enum_decl(&mut self, span: &Span, name: &str, variants: &[String]) -> Flow<()> {
         // Creating enum
         let enum_ref = Ref::new(Enum {
             name: name.to_string(),
-            variants: variants.clone(),
+            variants: variants.to_owned(),
         });
 
         // Defining enum in the environment
@@ -329,7 +329,7 @@ impl<'io> Interpreter<'io> {
             UsageKind::As(name) => self
                 .env
                 .borrow_mut()
-                .define(span, &name, Value::Module(module)),
+                .define(span, name, Value::Module(module)),
             UsageKind::For(items) => {
                 // Crawling items
                 let items: HashMap<String, Value> = {
@@ -373,11 +373,7 @@ impl<'io> Interpreter<'io> {
                 .env
                 .borrow_mut()
                 // Safety: `split()` returns iterator with at least 1 element
-                .define(
-                    span,
-                    &name.split("/").last().unwrap(),
-                    Value::Module(module),
-                ),
+                .define(span, name.split("/").last().unwrap(), Value::Module(module)),
         }
 
         Ok(())
@@ -413,14 +409,14 @@ impl<'io> Interpreter<'io> {
                 name,
                 methods,
                 ..
-            } => self.exec_type_decl(name_span, name, &methods),
+            } => self.exec_type_decl(name_span, name, methods),
             Statement::Enum {
                 span,
                 name,
                 variants,
                 ..
             } => self.exec_enum_decl(span, name, variants),
-            Statement::Function(function) => self.exec_function_decl(&function),
+            Statement::Function(function) => self.exec_function_decl(function),
             Statement::Let { span, name, value } => self.exec_let_decl(span, name, value),
             Statement::Assign {
                 span,

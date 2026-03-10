@@ -18,7 +18,7 @@ pub fn prepare_miette() {
 #[macro_export]
 macro_rules! assert_tokens {
     ($text:expr, $tokens:expr) => {
-        crate::assertion::prepare_miette();
+        $crate::assertion::prepare_miette();
         let src = std::sync::Arc::new(miette::NamedSource::new("test.tick", $text.to_string()));
         let lexer = tick_lex::lexer::Lexer::new(src, $text);
         assert_eq!(lexer.map(|tk| tk.kind).collect::<Vec<_>>(), $tokens);
@@ -30,7 +30,7 @@ macro_rules! assert_tokens {
 macro_rules! assert_ast {
     ($text:expr) => {{
         let result = match std::panic::catch_unwind(|| {
-            crate::assertion::prepare_miette();
+            $crate::assertion::prepare_miette();
             let src = std::sync::Arc::new(miette::NamedSource::new("test.tick", $text.to_string()));
             let lexer = tick_lex::lexer::Lexer::new(src.clone(), $text);
             let mut parser = tick_parse::parser::Parser::new(src, lexer);
@@ -61,7 +61,7 @@ macro_rules! assert_ast {
 macro_rules! assert_sema {
     ($text:expr) => {{
         let result = match std::panic::catch_unwind(|| {
-            crate::assertion::prepare_miette();
+            $crate::assertion::prepare_miette();
             let src = std::sync::Arc::new(miette::NamedSource::new("test.tick", $text.to_string()));
             let lexer = tick_lex::lexer::Lexer::new(src.clone(), $text);
             let mut parser = tick_parse::parser::Parser::new(src, lexer);

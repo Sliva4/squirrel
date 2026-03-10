@@ -11,34 +11,34 @@ use std::{cell::RefCell, rc::Rc};
 
 /// Print definition
 pub fn print() -> Ref<Native> {
-    return Ref::new(Native {
+    Ref::new(Native {
         arity: 1,
         function: Box::new(|rt, _, values| {
-            rt.io.output(&values.get(0).unwrap().to_string());
+            rt.io.output(&values.first().unwrap().to_string());
             rt.io.flush();
             Value::Null
         }),
-    });
+    })
 }
 
 /// Println definition
 pub fn println() -> Ref<Native> {
-    return Ref::new(Native {
+    Ref::new(Native {
         arity: 1,
         function: Box::new(|rt, _, values| {
-            rt.io.output(&format!("{}\n", values.get(0).unwrap()));
+            rt.io.output(&format!("{}\n", values.first().unwrap()));
             rt.io.flush();
             Value::Null
         }),
-    });
+    })
 }
 
 /// Readln definition
 pub fn readln() -> Ref<Native> {
-    return Ref::new(Native {
+    Ref::new(Native {
         arity: 0,
         function: Box::new(|rt, _, _| Value::String(rt.io.input())),
-    });
+    })
 }
 
 /// Provides env

@@ -43,7 +43,7 @@ impl<'io> Interpreter<'io> {
         let src = Arc::new(NamedSource::new(name, content.to_string()));
 
         // Creating lexer and parser
-        let lexer = Lexer::new(src.clone(), &content);
+        let lexer = Lexer::new(src.clone(), content);
         let mut parser = Parser::new(src, lexer);
 
         // Parsing module text into AST
@@ -77,7 +77,7 @@ impl<'io> Interpreter<'io> {
     /// Loads and executes module, if module with same name is not already executed.
     pub fn interpret_module(&mut self, name: &str, content: &str) -> MutRef<Module> {
         // Checking module is already loaded
-        match self.modules.get(&name) {
+        match self.modules.get(name) {
             // If already loaded, returning it
             Some(module) => module,
             // If not, executing it and saving to modules registry

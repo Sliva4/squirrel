@@ -18,6 +18,7 @@ pub struct Native {
     /// Function parameters arity
     pub arity: usize,
     /// Native function
+    #[allow(clippy::type_complexity)]
     pub function: Box<fn(&mut Interpreter, &Span, Vec<Value>) -> Value>,
 }
 

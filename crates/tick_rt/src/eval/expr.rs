@@ -48,7 +48,7 @@ impl<'io> Interpreter<'io> {
         // Invalid binary op
         let invalid_bin_op = || {
             bail!(RuntimeError::InvalidBinaryOp {
-                op: op.clone(),
+                op: *op,
                 a: left.clone(),
                 b: right.clone(),
                 src: span.0.clone(),
@@ -61,9 +61,9 @@ impl<'io> Interpreter<'io> {
             (Value::Bool(a), Value::Bool(b)) => match op {
                 BinaryOp::And => Value::Bool(a && b),
                 BinaryOp::Or => Value::Bool(a || b),
-                BinaryOp::Gt => Value::Bool(a > b),
+                BinaryOp::Gt => Value::Bool(a & !b),
                 BinaryOp::Ge => Value::Bool(a >= b),
-                BinaryOp::Lt => Value::Bool(a < b),
+                BinaryOp::Lt => Value::Bool(!a & b),
                 BinaryOp::Le => Value::Bool(a <= b),
                 BinaryOp::Eq => Value::Bool(a == b),
                 BinaryOp::Ne => Value::Bool(a != b),
@@ -307,9 +307,9 @@ impl<'io> Interpreter<'io> {
     }
 
     /// Evaluates arguments
-    fn eval_args(&mut self, args: &Vec<Expression>) -> Flow<Vec<Value>> {
+    fn eval_args(&mut self, args: &[Expression]) -> Flow<Vec<Value>> {
         let args: Result<Vec<Value>, ControlFlow> =
-            args.into_iter().map(|expr| self.eval(expr)).collect();
+            args.iter().map(|expr| self.eval(expr)).collect();
         args
     }
 
@@ -422,7 +422,7 @@ impl<'io> Interpreter<'io> {
     }
 
     /// Evaluates call expression
-    fn eval_call(&mut self, span: &Span, args: &Vec<Expression>, what: &Expression) -> Flow<Value> {
+    fn eval_call(&mut self, span: &Span, args: &[Expression], what: &Expression) -> Flow<Value> {
         // Evaluating arguments
         let args = self.eval_args(args)?;
 
@@ -445,7 +445,7 @@ impl<'io> Interpreter<'io> {
     }
 
     /// Evaluates list expression
-    fn eval_list(&mut self, span: &Span, list: &Vec<Expression>) -> Flow<Value> {
+    fn eval_list(&mut self, span: &Span, list: &[Expression]) -> Flow<Value> {
         // Evaluating values before accessing list
         let values = list
             .iter()
@@ -480,10 +480,10 @@ impl<'io> Interpreter<'io> {
     }
 
     /// Evaluates lambda expression
-    fn eval_anon_fn(&mut self, params: &Vec<String>, block: &Block) -> Flow<Value> {
+    fn eval_anon_fn(&mut self, params: &[String], block: &Block) -> Flow<Value> {
         Ok(Value::Callable(Callable::Closure(Ref::new(Closure {
             function: Ref::new(Function {
-                params: params.clone(),
+                params: params.to_owned(),
                 block: block.clone(),
             }),
             environment: self.env.clone(),
@@ -517,7 +517,7 @@ impl<'io> Interpreter<'io> {
     /// Is truthy helper
     pub(crate) fn is_truthy(&self, span: &Span, value: &Value) -> bool {
         if let Value::Bool(bool) = value {
-            bool.clone()
+            *bool
         } else {
             bail!(RuntimeError::ExpectedBool {
                 value: value.clone(),

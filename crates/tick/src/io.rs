@@ -27,7 +27,7 @@ impl IO for CliIO {
     /// Read implementation
     fn read(&self, path: &Utf8PathBuf) -> String {
         // Reading module
-        match fs::read_to_string(&path) {
+        match fs::read_to_string(path) {
             Ok(text) => text,
             Err(_) => bail!(IOError::FileNotFound(path.clone())),
         }

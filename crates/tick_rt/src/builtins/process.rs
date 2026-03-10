@@ -20,9 +20,9 @@ use tick_common::bug;
 
 /// Thread sleep
 fn sleep() -> Ref<Native> {
-    return Ref::new(Native {
+    Ref::new(Native {
         arity: 1,
-        function: Box::new(|_, span, values| match values.get(0).unwrap() {
+        function: Box::new(|_, span, values| match values.first().unwrap() {
             Value::Int(time) => {
                 if *time >= 0 {
                     thread::sleep(Duration::from_millis(*time as u64));
@@ -33,14 +33,14 @@ fn sleep() -> Ref<Native> {
             }
             _ => utils::error(span, "time expected to be an int"),
         }),
-    });
+    })
 }
 
 /// Process exit
 fn exit() -> Ref<Native> {
-    return Ref::new(Native {
+    Ref::new(Native {
         arity: 1,
-        function: Box::new(|_, span, values| match values.get(0).unwrap() {
+        function: Box::new(|_, span, values| match values.first().unwrap() {
             Value::Int(code) => {
                 if *code >= 0 {
                     if *code <= i32::MAX as i64 {
@@ -54,16 +54,16 @@ fn exit() -> Ref<Native> {
             }
             _ => utils::error(span, "exit code expected to be int"),
         }),
-    });
+    })
 }
 
 /// Process spawn
 fn spawn() -> Ref<Native> {
-    return Ref::new(Native {
+    Ref::new(Native {
         arity: 2,
         function: Box::new(|rt, span, values| {
             // Retrieving command
-            let cmd = match values.get(0).cloned().unwrap() {
+            let cmd = match values.first().cloned().unwrap() {
                 Value::String(s) => s,
                 _ => utils::error(span, "corrupted command"),
             };
@@ -104,10 +104,7 @@ fn spawn() -> Ref<Native> {
             let process_ty = match rt.builtins.modules.get("process") {
                 // Safety: borrow is temporal for the end of function
                 Some(module) => match module.borrow().env.borrow().lookup("Process") {
-                    Some(ty) => match ty {
-                        Value::Type(ty) => ty,
-                        _ => utils::error(span, "corrupted module"),
-                    },
+                    Some(Value::Type(ty)) => ty,
                     _ => utils::error(span, "corrupted module"),
                 },
                 None => utils::error(span, "corrupted module"),
@@ -123,7 +120,7 @@ fn spawn() -> Ref<Native> {
                 Err(_) => bug!("control flow leak"),
             }
         }),
-    });
+    })
 }
 
 /// `Process` init method
@@ -131,7 +128,7 @@ fn process_init_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 2,
         function: Box::new(|_, _, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Setting `$internal` field
@@ -153,7 +150,7 @@ fn process_pid_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -186,7 +183,7 @@ fn process_kill_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let process = values.get(0).cloned().unwrap();
+            let process = values.first().cloned().unwrap();
             match process {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -222,7 +219,7 @@ fn process_output_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -265,7 +262,7 @@ fn process_stderr_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -308,7 +305,7 @@ fn process_write_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -326,8 +323,7 @@ fn process_write_method() -> Method {
                                 match &mut child.stdin {
                                     Some(stdin) => {
                                         match stdin.write_all(
-                                             values.get(1).unwrap().to_string()
-                                                .as_bytes(),
+                                            values.get(1).unwrap().to_string().as_bytes(),
                                         ) {
                                             Ok(_) => {}
                                             Err(err) => utils::error(

@@ -112,7 +112,7 @@ impl<'s> Lexer<'s> {
         }
         self.advance();
 
-        let result = match char::from_u32(u32::from_str_radix(&buffer, 16).expect("Invalid hex")) {
+        match char::from_u32(u32::from_str_radix(&buffer, 16).expect("Invalid hex")) {
             Some(c) => c,
             None => {
                 bail!(LexError::InvalidEscapeSequence {
@@ -121,8 +121,7 @@ impl<'s> Lexer<'s> {
                     cause: "failed to convert `unciode char` into `u32`."
                 })
             }
-        };
-        result
+        }
     }
 
     /// Scans byte codepoint.
@@ -171,7 +170,7 @@ impl<'s> Lexer<'s> {
         }
         self.advance();
 
-        let result = match char::from_u32(u32::from_str_radix(&buffer, 16).expect("Invalid hex")) {
+        match char::from_u32(u32::from_str_radix(&buffer, 16).expect("Invalid hex")) {
             Some(c) => c,
             None => {
                 bail!(LexError::InvalidEscapeSequence {
@@ -180,8 +179,7 @@ impl<'s> Lexer<'s> {
                     cause: "failed to convert `unciode char` into `u32`."
                 })
             }
-        };
-        result
+        }
     }
 
     /// Advances escape sequence.
@@ -374,7 +372,9 @@ impl<'s> Lexer<'s> {
     }
 
     /// Is whitespace
+    #[allow(clippy::match_like_matches_macro)]
     fn is_whitespace(&mut self) -> bool {
+        // Explicit match
         match self.current {
             Some(' ') | Some('\n') | Some('\t') | Some('\r') => true,
             _ => false,
@@ -382,7 +382,9 @@ impl<'s> Lexer<'s> {
     }
 
     /// Is id letter
+    #[allow(clippy::match_like_matches_macro)]
     fn is_id_letter(&mut self) -> bool {
+        // Explicit match
         match self.current {
             Some(it) if it.is_ascii_alphabetic() || it == '_' => true,
             _ => false,
@@ -390,6 +392,7 @@ impl<'s> Lexer<'s> {
     }
 
     /// Is digit
+    #[allow(clippy::match_like_matches_macro)]
     fn is_digit(&mut self) -> bool {
         match self.current {
             Some(it) if it.is_ascii_digit() => true,
@@ -399,10 +402,7 @@ impl<'s> Lexer<'s> {
 
     /// Is end of file
     fn is_eof(&mut self) -> bool {
-        match self.current {
-            Some(_) => false,
-            None => true,
-        }
+        self.current.is_none()
     }
 }
 

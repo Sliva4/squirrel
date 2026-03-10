@@ -12,7 +12,7 @@ fn init_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, _, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     let vec = Value::Any(MutRef::new(RefCell::new(Vec::<Value>::new())));
@@ -36,7 +36,7 @@ fn to_string_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -68,7 +68,7 @@ fn push_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 2,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -103,7 +103,7 @@ fn get_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 2,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -149,7 +149,7 @@ fn set_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 3,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -198,7 +198,7 @@ fn insert_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 3,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -247,7 +247,7 @@ fn remove_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 2,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -296,7 +296,7 @@ fn len_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -328,7 +328,7 @@ fn clear_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -363,7 +363,7 @@ fn pop_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -395,7 +395,7 @@ fn index_of_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 2,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -433,7 +433,7 @@ fn contains_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 2,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
@@ -465,7 +465,7 @@ fn choice_method() -> Method {
     Method::Native(Ref::new(Native {
         arity: 1,
         function: Box::new(|_, span, values| {
-            let list = values.get(0).cloned().unwrap();
+            let list = values.first().cloned().unwrap();
             match list {
                 Value::Instance(instance) => {
                     // Safety: borrow is temporal for this line
