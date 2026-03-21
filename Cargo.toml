@@ -1,14 +1,14 @@
 [workspace]
 members = [
-    "crates/tick",
-    "crates/tick_ast",
-    "crates/tick_common",
-    "crates/tick_lex",
-    "crates/tick_parse",
-    "crates/tick_rt",
-    "crates/tick_sema",
-    "crates/tick_tests",
-    "crates/tick_wasm",
+    "crates/squirrel",
+    "crates/squirrel_ast",
+    "crates/squirrel_common",
+    "crates/squirrel_lex",
+    "crates/squirrel_parse",
+    "crates/squirrel_rt",
+    "crates/squirrel_sema",
+    "crates/squirrel_tests",
+    "crates/squirrel_wasm",
 ]
 resolver = "3"
 

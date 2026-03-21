@@ -1,6 +1,6 @@
 ## 📐 Syntax examples
 
-This document describes syntax of the `tick` programming language.
+This document describes syntax of the `Squirrel` programming language.
 
 ### Data types
 | Data type | Description                                                               |   Rust representation            |
@@ -18,11 +18,11 @@ This document describes syntax of the `tick` programming language.
 | any       | represents internal rusts `std::Any` variable                             | `Rc<RefCell<dyn std::any::Any>>` |
 
 ### Variable declaration
-`tick` does not support variables shadowing, so here's
+`Squirrel` does not support variables shadowing, so here's
 a way to define variable and to reassign it.
 
 Variable definition:
-```tick
+```Squirrel
 let id = value;
 ```
 
@@ -32,21 +32,21 @@ id = value;
 ```
 
 ### Binary operations
-`tick` supports following binary operations:
+`Squirrel` supports following binary operations:
 
-```tick
+```Squirrel
 + - * / % && & || | ^ > < == !=
 ```
 
 ### Unary operations
-`tick` supports following unary operations:
+`Squirrel` supports following unary operations:
 
 ```
 - !
 ```
 
 ### Compound operators
-`tick` supports following compound operators:
+`Squirrel` supports following compound operators:
 
 ```
 id += value;
@@ -76,9 +76,9 @@ Examples of the values:
 | any       | any_native_value           |
 
 ### Functions example
-Here's an example on how you can define function in `tick`:
+Here's an example on how you can define function in `Squirrel`:
 
-```tick
+```Squirrel
 fn fib(x) {
   if x <= 1 {
     return x;
@@ -88,9 +88,9 @@ fn fib(x) {
 }
 ```
 
-Tick supports closures:
+Squirrel supports closures:
 
-```tick
+```Squirrel
 fn a() {
   let x = 1;
   fn b() {
@@ -107,8 +107,8 @@ b(); // x = 5
 ```
 
 ### Classes or custom data types
-Tick supports custom data types. Here is example:
-```tick
+Squirrel supports custom data types. Here is example:
+```Squirrel
 type Dog {
   fn init() {
     self.food = 3;
@@ -125,7 +125,7 @@ let b = dog.food;
 ```
 
 ### Comments
-Tick comments examples:
+Squirrel comments examples:
 
 ```
 #[
@@ -141,7 +141,7 @@ brackets
 ```
 
 ### Usings
-Tick is modular:
+Squirrel is modular:
 ```
 use a # import `a` as `a`
 use a as b # import `a` as `b`
@@ -150,7 +150,7 @@ use a for b, c # import multiple items
 ```
 
 ### Loops
-Tick loops examples:
+Squirrel loops examples:
 
 For loop with range examples.
 You can use any expression instead of numbers in range.
@@ -172,7 +172,7 @@ for i in 100..=0 {
 }
 ```
 
-While loop examples. You can see, that `tick` supports `continue` and `break` keywords
+While loop examples. You can see, that `Squirrel` supports `continue` and `break` keywords
 ```
 let i = 0;
 while true {
@@ -189,7 +189,7 @@ while true {
 
 ### Logical statements
 If examples:
-```tick
+```Squirrel
 let a = scan();
 if int(a) > 5 {
   ...
@@ -202,13 +202,13 @@ if int(a) > 5 {
 
 ### Errors raising
 Bail immediately breaks execution with error:
-```tick
+```Squirrel
 bail "some text"
 ```
 
 ### Anonymous function
-Tick supports rust-like anonymous functions:
-```tick
+Squirrel supports rust-like anonymous functions:
+```Squirrel
 let a = || 1;
 let b = |a| a + 1;
 let c = |a| {
@@ -220,8 +220,8 @@ println(c(2));
 ```
 
 ### Enumerations
-Tick supports enumerations. Every variant is just an int variable inside `Dog`.
-```tick
+Squirrel supports enumerations. Every variant is just an int variable inside `Dog`.
+```Squirrel
 enum Dog {
   Poodle,  # 0
   Bulldog, # 1
