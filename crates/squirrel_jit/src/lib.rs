@@ -1,4 +1,9 @@
+/// Modules
+pub mod meta;
+pub mod stat;
+
 /// Imports
+use crate::meta::{Signature, Typ, Variable};
 use cranelift::{
     codegen,
     prelude::{
@@ -16,46 +21,14 @@ use squirrel_ast::{
 };
 use std::collections::HashMap;
 
-/// Represents type used during code generation
-#[derive(Clone, Copy, PartialEq)]
-pub enum Typ {
-    Int,
-    Float,
-    Bool,
-}
-
-/// Represents variable used during code generation
-#[derive(Clone, Copy)]
-pub struct Variable {
-    variable: prelude::Variable,
-    typ: Typ,
-}
-
-/// Represents function signature
-#[derive(Clone)]
-pub struct Signature {
-    name: String,
-    params: HashMap<String, Typ>,
-    ret: Option<Typ>,
-}
-
-/// Signature implementation
-impl Signature {
-    /// Creates new signature
-    pub fn new(name: &str, params: HashMap<String, Typ>, ret: Option<Typ>) -> Self {
-        Self {
-            name: name.to_string(),
-            params,
-            ret,
-        }
-    }
-}
-
 /// Code generation error
 #[derive(Debug)]
 pub enum Error {
     /// Could not generate code for function
     NoJitEligible,
+
+    /// No jit code generated currently
+    NoJitCode,
 
     /// Host machine is not supported
     HostMachineNotSupported,
@@ -747,13 +720,13 @@ impl CodeGenerator {
     /// Performs code generation
     pub fn codegen(&mut self, sig: Signature, body: &stmt::Block) -> Result<*const u8, Error> {
         // Preparing function params
-        for (_, param) in &sig.params {
+        sig.params.iter().for_each(|param| {
             self.context
                 .func
                 .signature
                 .params
-                .push(AbiParam::new(Self::map_type(param)))
-        }
+                .push(AbiParam::new(Self::map_type(&param.typ)))
+        });
 
         // Preparing function return type if presented
         if let Some(ret) = sig.ret {
@@ -797,8 +770,8 @@ impl CodeGenerator {
 
         // Preparing variables
         let args = context.builder.block_params(entry_block).to_vec();
-        for ((name, typ), val) in sig.params.iter().zip(args) {
-            let var = context.declare_var(&name, &typ);
+        for (param, arg) in sig.params.iter().zip(args) {
+            let var = context.declare_var(&param.name, &param.typ);
             context.builder.def_var(var.variable, val);
         }
 

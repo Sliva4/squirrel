@@ -6,7 +6,10 @@ use squirrel_ast::{
     expr::Expression,
     stmt::{Block, Statement},
 };
-use squirrel_jit::{CodeGenerator, Signature, Typ};
+use squirrel_jit::{
+    CodeGenerator,
+    meta::{Signature, Typ},
+};
 use squirrel_lex::token::Span;
 
 #[test]
@@ -58,7 +61,10 @@ pub fn test_jit_fibonacci() {
         expr::Expression,
         stmt::{Block, Statement},
     };
-    use squirrel_jit::{CodeGenerator, Signature, Typ};
+    use squirrel_jit::{
+        CodeGenerator,
+        meta::{Signature, Typ},
+    };
     use squirrel_lex::token::Span;
 
     let source = Arc::new(NamedSource::new("-".to_string(), "-".to_string()));
